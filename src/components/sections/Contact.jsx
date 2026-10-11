@@ -1,5 +1,15 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Mail, Globe, MapPin, Loader2, CheckCircle2 } from "lucide-react";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 const inputStyle = {
   width: "100%",
@@ -104,43 +114,47 @@ function ConnectForm() {
 
 export default function Contact() {
   return (
-    <section className="section" id="contact" style={{ overflow: "hidden" }}>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url(/images/footer-bg.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center 35%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(180deg, rgba(6,14,8,0.75) 0%, rgba(6,14,8,0.6) 40%, rgba(6,14,8,0.9) 100%)",
-        }}
-      />
-      <div className="section-inner" style={{ position: "relative" }}>
-        <img src="/images/logo-white.png" alt="GurNirmal" style={{ height: 34, marginBottom: 30 }} />
-        <h2
+    <section className="section" id="contact" style={{ overflow: "hidden", background: "#0e1611" }}>
+      <motion.div
+        className="section-inner"
+        style={{ position: "relative" }}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-15%" }}
+      >
+        <motion.img
+          variants={fadeUp}
+          custom={0}
+          src="/images/logo-white.png"
+          alt="GurNirmal"
+          style={{ height: 46, marginBottom: 30 }}
+        />
+        <motion.h2
+          variants={fadeUp}
+          custom={1}
           style={{
             color: "#fff",
             fontSize: "clamp(32px,5vw,64px)",
-            fontWeight: 800,
             maxWidth: 720,
-            lineHeight: 1.08,
+            lineHeight: 1.1,
           }}
         >
           Let's build together
-        </h2>
-        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 17, maxWidth: 560, marginTop: 18, lineHeight: 1.6 }}>
+        </motion.h2>
+        <motion.p
+          variants={fadeUp}
+          custom={2}
+          style={{ color: "rgba(255,255,255,0.6)", fontSize: 17, maxWidth: 560, marginTop: 18, lineHeight: 1.6 }}
+        >
           Partner with GurNirmal to turn ambitious AI ideas — and the spaces
           that house them — into reality.
-        </p>
+        </motion.p>
 
-        <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginTop: 36 }}>
+        <motion.div
+          variants={fadeUp}
+          custom={3}
+          style={{ display: "flex", gap: 28, flexWrap: "wrap", marginTop: 36 }}
+        >
           <a href="mailto:hello@gurnirmal.com" style={{ display: "flex", alignItems: "center", gap: 10, color: "#fff" }}>
             <span className="pill" style={{ width: 38, height: 38 }}>
               <Mail size={17} />
@@ -159,7 +173,7 @@ export default function Contact() {
             </span>
             <span style={{ fontWeight: 600, fontSize: 15 }}>Bengaluru, India</span>
           </div>
-        </div>
+        </motion.div>
 
         <ConnectForm />
 
@@ -180,7 +194,7 @@ export default function Contact() {
           </span>
           <span style={{ color: "#a4d94a", fontFamily: "var(--font-display)", fontWeight: 700 }}>Thank you</span>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,111 +1,91 @@
-import { ArrowDown } from "lucide-react";
-import { scrollStore } from "../../three/scrollStore";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import BuildingAnimation from "../BuildingAnimation";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 export default function Hero() {
   return (
     <section
+      id="hero"
       className="section"
-      style={{
-        alignItems: "flex-start",
-        padding: 0,
-        justifyContent: "flex-end",
-        overflow: "hidden",
-      }}
+      style={{ minHeight: "92vh", display: "flex", alignItems: "center" }}
     >
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url(/images/hero-bg.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center 30%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(190deg, rgba(6,14,8,0.15) 0%, rgba(6,14,8,0.35) 45%, rgba(6,14,8,0.86) 100%)",
-        }}
-      />
-
-      <div
-        className="section-inner"
-        style={{ position: "relative", paddingBottom: 100, pointerEvents: "auto" }}
+        className="section-inner two-col"
+        style={{ gridTemplateColumns: "1.15fr 0.85fr", alignItems: "center" }}
       >
-        <span className="eyebrow" style={{ color: "#c3e88a" }}>
-          Technology Private Limited
-        </span>
-        <h1
-          style={{
-            color: "#fff",
-            fontSize: "clamp(34px, 6.2vw, 76px)",
-            fontWeight: 800,
-            lineHeight: 1.04,
-            marginTop: 16,
-            maxWidth: 920,
-            textShadow: "0 4px 30px rgba(0,0,0,0.35)",
-          }}
-        >
-          One connected ecosystem — work, live, learn &amp; grow
-        </h1>
-        <p
-          style={{
-            color: "rgba(255,255,255,0.82)",
-            fontSize: "clamp(15px,1.8vw,19px)",
-            maxWidth: 620,
-            marginTop: 20,
-            lineHeight: 1.6,
-          }}
-        >
-          GurNirmal builds landmark technology parks — IT towers, hospitals,
-          schools, homes, retail, sport and green space — designed and
-          engineered end to end, alongside the AI systems that run inside
-          them.
-        </p>
-
-        <div style={{ display: "flex", gap: 14, marginTop: 34, flexWrap: "wrap" }}>
-          <button className="btn btn-primary" onClick={() => scrollStore.goToSection("ecopark")}>
-            Walk the ecosystem
-          </button>
-          <button className="btn btn-ghost" onClick={() => scrollStore.goToSection("whoWeAre")}>
-            Explore
-          </button>
+        <div>
+          <motion.span className="eyebrow" variants={fadeUp} custom={0} initial="hidden" animate="show">
+            GurNirmal Technology
+          </motion.span>
+          <motion.h1
+            variants={fadeUp}
+            custom={1}
+            initial="hidden"
+            animate="show"
+            style={{
+              fontSize: "clamp(40px, 7vw, 92px)",
+              fontWeight: 400,
+              lineHeight: 1.03,
+              marginTop: 22,
+              maxWidth: 900,
+              color: "var(--ink)",
+            }}
+          >
+            AI software.
+            <br />
+            Real places to grow.
+          </motion.h1>
+          <motion.p
+            variants={fadeUp}
+            custom={2}
+            initial="hidden"
+            animate="show"
+            style={{
+              fontSize: "clamp(16px, 1.6vw, 19px)",
+              color: "var(--ink-soft)",
+              maxWidth: 560,
+              marginTop: 26,
+              lineHeight: 1.6,
+            }}
+          >
+            We build AI systems for AI-native clients, and the technology
+            parks that give innovation somewhere to live.
+          </motion.p>
+          <motion.div
+            variants={fadeUp}
+            custom={3}
+            initial="hidden"
+            animate="show"
+            style={{ display: "flex", gap: 14, marginTop: 40, flexWrap: "wrap" }}
+          >
+            <a href="#about" className="btn btn-primary">
+              See what we do <ArrowRight size={16} />
+            </a>
+            <a href="#contact" className="btn btn-ghost-dark">
+              Get in touch
+            </a>
+          </motion.div>
         </div>
+
+        <motion.div
+          variants={fadeUp}
+          custom={2}
+          initial="hidden"
+          animate="show"
+          className="hide-mobile"
+        >
+          <BuildingAnimation />
+        </motion.div>
       </div>
-
-      <button
-        onClick={() => scrollStore.goToSection("whoWeAre")}
-        style={{
-          position: "absolute",
-          bottom: 26,
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "none",
-          border: "none",
-          color: "rgba(255,255,255,0.75)",
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 6,
-          fontSize: 11,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          animation: "bob 2s ease-in-out infinite",
-        }}
-      >
-        Scroll
-        <ArrowDown size={16} />
-      </button>
-
-      <style>{`
-        @keyframes bob {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(8px); }
-        }
-      `}</style>
     </section>
   );
 }

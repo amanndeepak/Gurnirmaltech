@@ -1,41 +1,58 @@
-import { Loader } from "@react-three/drei";
-import Experience from "./three/Experience";
-import Navbar from "./components/Navbar";
-import ScrollDots from "./components/ScrollDots";
-import Hero from "./components/sections/Hero";
-import WhoWeAre from "./components/sections/WhoWeAre";
-import Capabilities from "./components/sections/Capabilities";
-import EkDiary from "./components/sections/EkDiary";
-import Ecosystem from "./components/sections/Ecosystem";
-import TechParks from "./components/sections/TechParks";
-import Mission from "./components/sections/Mission";
-import WhyUs from "./components/sections/WhyUs";
-import Contact from "./components/sections/Contact";
+import { Suspense, useRef, useState } from "react";
+import Scene from "./three/Scene";
+import Overlay from "./components/Overlay";
+import { INTERIOR_INFO } from "./three/Interiors";
+import "./app.css";
 
 export default function App() {
-  return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      <Experience>
-        <Hero />
-        <WhoWeAre />
-        <Capabilities />
-        <EkDiary />
-        <Ecosystem />
-        <TechParks />
-        <Mission />
-        <WhyUs />
-        <Contact />
-      </Experience>
+  const [explore, setExplore] = useState(false);
+  // ?room=Bank opens a building directly (handy for sharing a specific interior)
+  const [view, setView] = useState(() => {
+    const room = new URLSearchParams(window.location.search).get("room");
+    return room && INTERIOR_INFO[room] ? room : "city";
+  });
+  const [fly, setFly] = useState(null);
+  const [curtain, setCurtain] = useState(false);
+  const busy = useRef(false);
 
-      <Navbar />
-      <ScrollDots />
-      <Loader
-        containerStyles={{ background: "#f6f9f1" }}
-        innerStyles={{ background: "rgba(20,40,20,0.08)", width: 200 }}
-        barStyles={{ background: "#5b9c1f" }}
-        dataStyles={{ color: "#4a5c4a", fontFamily: "Manrope, sans-serif", fontSize: 12 }}
-        dataInterpolation={(p) => `Loading ${p.toFixed(0)}%`}
-      />
-    </div>
+  // fly to the clicked sign, fade out, then swap in that building's interior
+  const enter = (type, position) => {
+    if (busy.current) return;
+    busy.current = true;
+    // from the building menu there is no sign to fly to, so just fade
+    const lead = position ? 700 : 0;
+    if (position) setFly(position);
+    setTimeout(() => setCurtain(true), lead);
+    setTimeout(() => {
+      setView(type);
+      setFly(null);
+      setExplore(false);
+    }, lead + 400);
+    setTimeout(() => {
+      setCurtain(false);
+      busy.current = false;
+    }, lead + 600);
+  };
+
+  const exit = () => {
+    if (busy.current) return;
+    busy.current = true;
+    setCurtain(true);
+    setTimeout(() => setView("city"), 400);
+    setTimeout(() => {
+      setCurtain(false);
+      busy.current = false;
+    }, 600);
+  };
+
+  return (
+    <main className="stage">
+      <div className="canvas-wrap">
+        <Suspense fallback={null}>
+          <Scene explore={explore} view={view} fly={fly} onEnter={enter} />
+        </Suspense>
+      </div>
+      <Overlay explore={explore} setExplore={setExplore} view={view} curtain={curtain} onExit={exit} onEnter={enter} />
+    </main>
   );
 }
